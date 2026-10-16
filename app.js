@@ -45,3 +45,87 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredIns
 $('installBtn').addEventListener('click',async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;$('installBtn').classList.add('hidden');});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
 render();
+
+/* Koneksi Supabase + login Kasir Pintar */
+const sb = window.supabase.createClient(
+  'https://rhmjurqpegavkvccdzpf.supabase.co',
+  'sb_publishable_RyxIarjLZwYt8_a4-CUceQ_Ha6ZIpRG'
+);
+
+const authBox = document.getElementById('authBox');
+const authForm = document.getElementById('authForm');
+const signupBtn = document.getElementById('signupBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const authMessage = document.getElementById('authMessage');
+const shell = document.querySelector('.shell');
+
+const appSections = [...shell.children].filter(
+  el => el !== authBox
+);
+
+function showApp(session) {
+  appSections.forEach(el => el.hidden = !session);
+  authForm.hidden = !!session;
+  signupBtn.hidden = !!session;
+  logoutBtn.hidden = !session;
+  authMessage.textContent = session
+    ? 'Login sebagai ' + session.user.email
+    : 'Silakan login atau daftar akun baru.';
+}
+
+authForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  authMessage.textContent = 'Memproses login...';
+
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+
+  const { error } = await sb.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  authMessage.textContent = error
+    ? 'Login gagal: ' + error.message
+    : 'Login berhasil.';
+});
+
+signupBtn.addEventListener('click', async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+
+  if (!email || password.length < 6) {
+    authMessage.textContent =
+      'Isi email dan password minimal 6 karakter.';
+    return;
+  }
+
+  authMessage.textContent = 'Membuat akun...';
+
+  const { error } = await sb.auth.signUp({
+    email,
+    password
+  });
+
+  authMessage.textContent = error
+    ? 'Pendaftaran gagal: ' + error.message
+    : 'Pendaftaran berhasil. Periksa email jika diminta verifikasi.';
+});
+
+logoutBtn.addEventListener('click', async () => {
+  const { error } = await sb.auth.signOut();
+  if (error) authMessage.textContent = error.message;
+});
+
+sb.auth.onAuthStateChange((_event, session) => {
+  showApp(session);
+});
+
+sb.auth.getSession().then(({ data, error }) => {
+  if (error) {
+    authMessage.textContent = 'Gagal memeriksa login.';
+    return;
+  }
+  showApp(data.session);
+});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
