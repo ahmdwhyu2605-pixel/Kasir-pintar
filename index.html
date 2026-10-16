@@ -15,6 +15,20 @@
     <button id="installBtn" class="button ghost hidden">Pasang aplikasi</button>
   </header>
   <main class="shell">
+    <section id="authBox" style="max-width:420px;margin:30px auto;padding:24px;border:1px solid #ddd;border-radius:16px">
+  <h2>Kasir Pintar</h2>
+  <p>Login atau buat akun toko</p>
+  <form id="authForm">
+    <label>Email</label>
+    <input id="authEmail" type="email" required placeholder="Email kamu">
+    <label>Password</label>
+    <input id="authPassword" type="password" minlength="6" required placeholder="Minimal 6 karakter">
+    <button class="button primary full" type="submit">Login</button>
+  </form>
+  <button id="signupBtn" class="button full" type="button">Daftar akun baru</button>
+  <button id="logoutBtn" class="button ghost full" type="button" hidden>Logout</button>
+  <p id="authMessage" role="status"></p>
+      </section>
     <section class="welcome">
       <div><p class="eyebrow">DASHBOARD TOKO</p><h1>Halo, pemilik toko 👋</h1><p class="muted">Ini versi awal Kasir Pintar. Data pada demo ini masih tersimpan di browser perangkat ini.</p></div>
       <div class="demo-pill"><span></span> Mode demo lokal</div>
@@ -81,6 +95,7 @@
     <footer><span>Kasir Pintar · Fondasi versi 0.1</span><button id="resetDemo" class="text-button">Reset data demo</button></footer>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="./app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./app.js"></script>
 </body>
 </html>
