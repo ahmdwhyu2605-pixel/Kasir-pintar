@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="Kasir Pintar — kasir, stok, dan laporan toko.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./app.css">
+  <title>Kasir Pintar</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">KP</div><div><strong>Kasir Pintar</strong><small>POS untuk toko modern</small></div></div>
+    <button id="installBtn" class="button ghost hidden">Pasang aplikasi</button>
+  </header>
+  <main class="shell">
+    <section class="welcome">
+      <div><p class="eyebrow">DASHBOARD TOKO</p><h1>Halo, pemilik toko 👋</h1><p class="muted">Ini versi awal Kasir Pintar. Data pada demo ini masih tersimpan di browser perangkat ini.</p></div>
+      <div class="demo-pill"><span></span> Mode demo lokal</div>
+    </section>
+    <section class="stats">
+      <article class="stat-card"><span>Penjualan hari ini</span><strong id="salesTotal">Rp0</strong><small id="salesCount">0 transaksi</small></article>
+      <article class="stat-card"><span>Produk terdaftar</span><strong id="productCount">0</strong><small>Termasuk stok toko</small></article>
+      <article class="stat-card"><span>Stok menipis</span><strong id="lowStock">0</strong><small>Produk dengan stok ≤ 5</small></article>
+    </section>
+    <nav class="tabs" aria-label="Navigasi">
+      <button class="tab active" data-tab="kasir">Kasir</button>
+      <button class="tab" data-tab="produk">Produk & Stok</button>
+      <button class="tab" data-tab="arus">Arus Kas</button>
+      <button class="tab" data-tab="admin">Admin Pusat</button>
+    </nav>
+    <section class="panel active" id="panel-kasir">
+      <div class="section-heading"><div><h2>Transaksi baru</h2><p class="muted">Pilih produk untuk memasukkannya ke keranjang.</p></div><button id="clearCart" class="button ghost">Kosongkan</button></div>
+      <div class="checkout-grid">
+        <div><div id="productGrid" class="product-grid"></div></div>
+        <aside class="cart">
+          <h3>Keranjang</h3><div id="cartItems" class="cart-items"><p class="muted">Belum ada produk.</p></div>
+          <div class="total-row"><span>Total</span><strong id="cartTotal">Rp0</strong></div>
+          <label>Metode pembayaran<select id="paymentMethod"><option value="Tunai">Tunai</option><option value="QRIS">QRIS (catat manual)</option><option value="Transfer">Transfer</option><option value="Debit">Kartu debit</option></select></label>
+          <label>Uang diterima (untuk tunai)<input id="cashReceived" type="number" min="0" inputmode="numeric" placeholder="Contoh: 50000"></label>
+          <div class="change-row"><span>Kembalian</span><strong id="changeTotal">Rp0</strong></div>
+          <button id="checkoutBtn" class="button primary full">Selesaikan transaksi demo</button>
+          <p class="tiny muted">Transaksi demo bukan bukti pembayaran. QRIS belum terhubung ke penyedia pembayaran.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="panel" id="panel-produk">
+      <div class="section-heading"><div><h2>Produk & stok</h2><p class="muted">Tambahkan barang untuk uji coba.</p></div></div>
+      <form id="productForm" class="form-grid">
+        <label>Nama produk<input id="newName" required maxlength="80" placeholder="Contoh: Air mineral"></label>
+        <label>Barcode (opsional)<input id="newBarcode" maxlength="80" placeholder="Kode barcode"></label>
+        <label>Harga jual (Rp)<input id="newPrice" required type="number" min="0" inputmode="numeric" placeholder="5000"></label>
+        <label>Stok awal<input id="newStock" required type="number" min="0" inputmode="numeric" placeholder="20"></label>
+        <button class="button primary" type="submit">Tambah produk</button>
+      </form>
+      <div class="table-wrap"><table><thead><tr><th>Produk</th><th>Barcode</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="productRows"></tbody></table></div>
+    </section>
+    <section class="panel" id="panel-arus">
+      <div class="section-heading"><div><h2>Arus kas</h2><p class="muted">Catat pemasukan atau pengeluaran non-penjualan.</p></div></div>
+      <form id="cashForm" class="form-grid">
+        <label>Jenis<select id="cashType"><option value="Pemasukan">Pemasukan</option><option value="Pengeluaran">Pengeluaran</option></select></label>
+        <label>Nominal (Rp)<input id="cashAmount" type="number" min="1" required inputmode="numeric" placeholder="10000"></label>
+        <label>Keterangan<input id="cashNote" required maxlength="120" placeholder="Contoh: beli kantong plastik"></label>
+        <button class="button primary" type="submit">Simpan catatan</button>
+      </form>
+      <div id="cashEntries" class="entries"></div>
+    </section>
+    <section class="panel" id="panel-admin">
+      <div class="section-heading"><div><h2>Admin pusat</h2><p class="muted">Pratinjau panel pemilik platform. Kontrol online belum aktif pada versi demo.</p></div><span class="badge">Pratinjau</span></div>
+      <div class="notice"><strong>Catatan keamanan</strong><p>Jangan tampilkan kontrol admin kepada semua pengguna dalam rilis produksi. Admin pusat harus dilindungi login, role yang diverifikasi di server/database, dan kebijakan akses.</p></div>
+      <div class="admin-cards">
+        <div class="mini-card"><span>Pengguna/toko</span><strong>Belum terhubung</strong></div>
+        <div class="mini-card"><span>Paket gratis</span><strong>Siap dirancang</strong></div>
+        <div class="mini-card"><span>Paket premium</span><strong>Belum aktif</strong></div>
+      </div>
+      <h3>Rencana paket</h3>
+      <div class="plans"><article><h4>Gratis</h4><strong>Rp0</strong><p>Kasir dasar, produk terbatas, laporan sederhana.</p></article><article class="premium"><h4>Premium</h4><strong>Harga ditentukan nanti</strong><p>Produk lebih banyak, laporan lanjutan, ekspor, dan fitur tambahan.</p></article></div>
+      <p class="tiny muted">Harga dan batas fitur ini masih rancangan, belum berlaku untuk pengguna.</p>
+    </section>
+    <footer><span>Kasir Pintar · Fondasi versi 0.1</span><button id="resetDemo" class="text-button">Reset data demo</button></footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
